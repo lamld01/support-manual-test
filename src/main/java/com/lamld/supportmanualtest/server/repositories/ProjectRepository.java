@@ -12,4 +12,6 @@ public interface ProjectRepository extends JpaRepository<Project, Integer>, JpaS
   Optional<Project> findByIdAndAccountId(Integer id, Integer accountId);
 
   List<Project> findAllByAccountId(Integer accountId);
+
+  List<Project> findAllByAccountIdAndParentProjectIdAndIdNot(Integer accountId, Integer parentId, Integer id);
 }

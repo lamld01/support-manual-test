@@ -4,8 +4,15 @@ import com.lamld.supportmanualtest.app.dto.project.ProjectDto;
 import com.lamld.supportmanualtest.app.response.project.ProjectResponse;
 import com.lamld.supportmanualtest.server.entities.Project;
 import com.lamld.supportmanualtest.server.data.auth.AccountInfo;
+import com.lamld.supportmanualtest.server.exception.BadRequestException;
+import com.lamld.supportmanualtest.server.repositories.ProjectRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,11 +20,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectService extends BaseService {
 
+  private final ProjectRepository projectRepository;
 
+
+  @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
   public ProjectResponse createProject(AccountInfo accountInfo, ProjectDto projectDto) {
     Project project = modelMapper.toProject(projectDto);
     project.setAccountId(accountInfo.getAccountId());
-    projectStorage.save(project);
+    if(projectDto.parentProjectId() == null) {
+      project = projectStorage.save(project);
+      project.setParentProjectId(project.getId());
+      project.setRootProjectId(project.getId());
+    }else{
+      Project parentProject = projectStorage.findById(projectDto.parentProjectId()).orElseThrow(() -> new BadRequestException("Parent project not found"));
+      project.setRootProjectId(parentProject.getRootProjectId());
+      project.setParentProjectId(parentProject.getId());
+    }
+    projectRepository.save(project);
     return modelMapper.toProjectResponse(project);
   }
 
@@ -31,8 +50,8 @@ public class ProjectService extends BaseService {
     return modelMapper.toProjectResponse(project);
   }
 
-  public List<ProjectResponse> getAllProjects(AccountInfo accountInfo) {
-    List<Project> projects = projectStorage.findAllByAccountId(accountInfo.getAccountId());
+  public List<ProjectResponse> getAllProjects(AccountInfo accountInfo, Integer parentId) {
+    List<Project> projects = projectStorage.findAllByAccountIdAndParentProjectIdAndIdNot(accountInfo.getAccountId(), parentId, parentId);
     return modelMapper.toProjectResponseList(projects);
   }
 
@@ -46,5 +65,10 @@ public class ProjectService extends BaseService {
   public void deleteProject(AccountInfo accountInfo, Integer id) {
     Project project = getProjectById(accountInfo.getAccountId(), id);
     projectStorage.delete(project);
+  }
+
+  public Page<ProjectResponse> findProjectAccounts(AccountInfo accountInfo, String projectName, Pageable pageable) {
+    Page<Project> projects = projectStorage.findByFilters(accountInfo.getAccountId(), projectName, pageable);
+    return modelMapper.toPageProjectResponse(projects);
   }
 }

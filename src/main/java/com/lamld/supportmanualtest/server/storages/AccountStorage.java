@@ -18,16 +18,16 @@ public class AccountStorage extends BaseStorage {
         return accountRepository.findById(accountId);
     }
 
-    public Page<Account> findByFilters(Long managerAccountId, String username, String status, Pageable pageable) {
-        return accountRepository.findAll(filterByConditions(managerAccountId, username, status), pageable);
+    public Page<Account> findByFilters(Integer id, String username, String status, Pageable pageable) {
+        return accountRepository.findAll(filterByConditions(id, username, status), pageable);
     }
 
-    private Specification<Account> filterByConditions(Long managerAccountId, String username, String status) {
+    private Specification<Account> filterByConditions(Integer id, String username, String status) {
         return (root, query, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
-            if (managerAccountId != null) {
-                predicates.add(cb.equal(root.get("managerAccountId"), managerAccountId));
+            if (id != null) {
+                predicates.add(cb.equal(root.get("id"), id));
             }
 
             if (username != null) {

@@ -24,13 +24,11 @@ public class Project extends BaseEntity {
   @Column(name = "account_id", nullable = false)
   private Integer accountId;
 
-  @NotNull
   @Column(name = "parent_project_id", nullable = false)
-  private Integer parentProjectId;
+  private Integer parentProjectId = 0;
 
-  @NotNull
   @Column(name = "root_project_id", nullable = false)
-  private Integer rootProjectId;
+  private Integer rootProjectId = 0;
 
   @Size(max = 255)
   @Column(name = "project_name")
@@ -43,5 +41,9 @@ public class Project extends BaseEntity {
   @Size(max = 1000)
   @Column(name = "token", length = 1000)
   private String token;
+
+  @Size(max = 1000)
+  @Column(name = "description", length = 1000)
+  private String description;
 
 }

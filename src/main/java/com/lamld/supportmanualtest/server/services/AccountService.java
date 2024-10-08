@@ -3,12 +3,15 @@ package com.lamld.supportmanualtest.server.services;
 import com.lamld.supportmanualtest.app.dto.account.AccountCreate;
 import com.lamld.supportmanualtest.app.dto.account.AccountSignIn;
 import com.lamld.supportmanualtest.app.response.account.AccountResponse;
+import com.lamld.supportmanualtest.server.data.auth.AccountInfo;
 import com.lamld.supportmanualtest.server.data.auth.TokenInfo;
 import com.lamld.supportmanualtest.server.entities.Account;
 import com.lamld.supportmanualtest.server.exception.BadRequestException;
 import com.lamld.supportmanualtest.server.securities.SecurityService;
 import com.lamld.supportmanualtest.server.utils.JwtUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -86,4 +89,8 @@ public class AccountService extends BaseService {
         .orElseThrow(() -> new BadRequestException("Account not found"));
   }
 
+  public Page<AccountResponse> findSellerAccounts(AccountInfo accountInfo, String username, String status, Pageable pageable) {
+    Page<Account> accounts = accountStorage.findByFilters(accountInfo.getAccountId(), username, status, pageable);
+    return modelMapper.toPageAccountResponse(accounts);
+  }
 }

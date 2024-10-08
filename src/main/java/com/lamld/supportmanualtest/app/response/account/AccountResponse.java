@@ -18,11 +18,4 @@ public class AccountResponse {
     private String username;
     private SellerRoleEnum role;
     private AccountStatusEnum status;
-
-    public AccountResponse(Account account) {
-        this.id = account.getId();
-        this.username = account.getUsername();
-        this.role = account.getRole();
-        this.status = account.getStatus();
-    }
 }

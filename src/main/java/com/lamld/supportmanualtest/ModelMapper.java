@@ -10,6 +10,7 @@ import com.lamld.supportmanualtest.server.entities.Project;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -27,4 +28,12 @@ public interface ModelMapper {
   ProjectResponse toProjectResponse(Project project);
 
   List<ProjectResponse> toProjectResponseList(List<Project> projects);
+
+  default Page<AccountResponse> toPageAccountResponse(Page<Account> accounts){
+    return accounts.map(this::toAccountResponse);
+  }
+
+  default Page<ProjectResponse> toPageProjectResponse(Page<Project> projects){
+    return projects.map(this::toProjectResponse);
+  }
 }
