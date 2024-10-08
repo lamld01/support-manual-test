@@ -1,0 +1,69 @@
+spring:
+  application:
+    name:  ${APPLICATION_NAME:mos-service-dev}
+  threads:
+    virtual:
+      enabled: ${THREAD_VIRTUAL_ENABLE:true}
+  datasource:
+    url: ${DATASOURCE_URL}
+    username: ${DATASOURCE_USERNAME}
+    password: ${DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      validation-timeout: ${DATASOURCE_HIKARI_VALIDATION_TIMEOUT:10000}
+      connection-timeout: ${DATASOURCE_HIKARI_CONNECTION_TIMEOUT:10000}
+      maximum-pool-size: ${DATASOURCE_MAX_POOL_SIZE:10}
+      max-lifetime: ${DATASOURCE_HIKARI_MAX_LIFETIME:1800000}
+      data-source-properties:
+        cacheServerConfiguration: ${DATASOURCE_CACHE_SERVER_CONFIGURATION:true}
+        useLocalSessionState: ${DATASOURCE_USE_LOCAL_SESSION_STATE:true}
+        cachePrepStmts: ${DATASOURCE_CACHE_PREP_STMTS:true}
+        prepStmtCacheSize: ${DATASOURCE_PREP_STMT_CACHE_SIZE:250}
+        prepStmtCacheSqlLimit: ${DATASOURCE_PREP_STMT_CACHE_SQL_LIMIT:2048}
+        cacheCallableStmts: ${DATASOURCE_CACHE_CALLABLE_STMTS:true}
+        useServerPrepStmts: ${DATASOURCE_USE_SERVER_PREP_STMTS:true}
+        rewriteBatchedStatements: ${DATASOURCE_REWRITE_BATCHED_STATEMENTS:true}
+        maintainTimeStats: ${DATASOURCE_MAINTAIN_TIME_STATS:false}
+        logSlowQueries: ${DATASOURCE_LOG_SLOW_QUERIES:false}
+        leakDetectionThreshold: ${$DATASOURCE_LEAK_DETECTION_THRESHOLD:0}
+  jpa:
+    open-in-view: ${JPA_OPEN_IN_VIEW:true}
+    database: mysql
+    show-sql: ${JPA_OPEN_IN_VIEW:true}
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        generate_statistics: ${HIBERNATE_STATISTICS:true}
+        jdbc.batch_size: ${DATASOURCE_BATCH_SIZE:100}
+        order_inserts: true
+        order_updates: true
+        continue-on-error: true
+  security:
+    jwt:
+      secret: ${JWT_SECRET:true}
+      expiration: ${JWT_EXPIRATION:86400000}
+
+
+springdoc:
+  api-docs:
+    path: /v1/manual-test/docs/api/index.html
+  swagger-ui:
+    path: /v1/manual-test/docs/index.html
+    display-request-duration: true
+    syntax-highlight:
+      activated: true
+      theme: monokai
+    filter: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+
+logging:
+  level:
+    org.springframework.web: ${LOG_LEVEL:debug}
+    com.lamld: ${LOG_LEVEL:debug}
+redis:
+  prefix-key: ${REDIS_PREFIX_KEY:mos}
+server:
+  port: ${PORT:8080}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration>
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%style{%d{dd/MM/yy HH:mm:ss}}{yellow} | %highlight{%-5level}{FATAL=bg_red, ERROR=red, WARN=yellow, INFO=green} | wiportal_cms_service | %replace{%mdc{userId}}{^$}{empty} | %replace{%mdc{traceId}}{^$}{empty} | %replace{%mdc{spanId}}{^$}{empty} | %replace{%mdc{duration}}{^$}{0} | %style{%F}{blue}: %m%n" disableAnsi="false"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Logger name="org.springframework.web" level="${env:LOG_LEVEL}" includeLocation="true"/>
+    <Root level="warn" includeLocation="true">
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+
+</Configuration>
