@@ -54,7 +54,7 @@ public class ProjectStorage extends BaseStorage {
         predicates.add(cb.equal(root.get("accountId"), accountId));
       }
 
-      if (projectName!= null) {
+      if (projectName!= null && !projectName.isEmpty()) {
         predicates.add(cb.like(cb.lower(root.get("projectName")), "%" + projectName.toLowerCase() + "%"));
       }
       predicates.add(cb.equal(root.get("id"), root.get("rootProjectId")));

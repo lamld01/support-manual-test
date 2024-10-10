@@ -6,6 +6,11 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -38,9 +43,12 @@ public class TestField extends BaseEntity {
   @Column(name = "field_code", nullable = false)
   private String fieldCode;
 
-  @ColumnDefault("'STRING'")
-  @Lob
-  @Column(name = "field_type")
-  private String fieldType;
+  @Column(name = "validate_constrain_ids")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private List<Integer> validateConstrainIds;
+
+  @NotNull
+  @Column(name = "account_id", nullable = false)
+  private Integer accountId;
 
 }

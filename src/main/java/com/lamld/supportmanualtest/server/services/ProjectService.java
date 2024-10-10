@@ -71,4 +71,9 @@ public class ProjectService extends BaseService {
     Page<Project> projects = projectStorage.findByFilters(accountInfo.getAccountId(), projectName, pageable);
     return modelMapper.toPageProjectResponse(projects);
   }
+
+  public List<ProjectResponse> findAll() {
+    List<Project> projects = projectRepository.findAll();
+    return modelMapper.toProjectResponseList(projects);
+  }
 }

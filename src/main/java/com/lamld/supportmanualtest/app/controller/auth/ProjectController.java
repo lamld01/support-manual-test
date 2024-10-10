@@ -56,7 +56,6 @@ public class ProjectController extends BaseController {
   }
 
   @DeleteMapping("/{id}")
-  @ResponseStatus(HttpStatus.NO_CONTENT)
   public void deleteProject(Authentication authentication, @PathVariable Integer id) {
     projectService.deleteProject(getAccountInfo(authentication),id);
   }
