@@ -3,16 +3,15 @@ package com.lamld.supportmanualtest;
 
 import com.lamld.supportmanualtest.app.dto.account.AccountCreate;
 import com.lamld.supportmanualtest.app.dto.project.ProjectDto;
+import com.lamld.supportmanualtest.app.dto.testApi.TestApiDto;
 import com.lamld.supportmanualtest.app.dto.testField.TestFieldDto;
 import com.lamld.supportmanualtest.app.dto.validateConstrain.ValidateConstrainDto;
 import com.lamld.supportmanualtest.app.response.account.AccountResponse;
 import com.lamld.supportmanualtest.app.response.project.ProjectResponse;
+import com.lamld.supportmanualtest.app.response.testApi.TestApiResponse;
 import com.lamld.supportmanualtest.app.response.testField.TestFieldResponse;
 import com.lamld.supportmanualtest.app.response.validateConstrain.ValidateConstrainResponse;
-import com.lamld.supportmanualtest.server.entities.Account;
-import com.lamld.supportmanualtest.server.entities.Project;
-import com.lamld.supportmanualtest.server.entities.TestField;
-import com.lamld.supportmanualtest.server.entities.ValidateConstrain;
+import com.lamld.supportmanualtest.server.entities.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
@@ -59,7 +58,19 @@ public interface ModelMapper {
 
   void mapToTestField(@MappingTarget TestField testField, TestFieldDto testFieldDto);
 
-  default Page<TestFieldResponse> toPageTestFieldResponse(Page<TestField> testFieldResponses){
-    return testFieldResponses.map(this::toTestFieldResponse);
+  default Page<TestFieldResponse> toPageTestFieldResponse(Page<TestField> testFieldResponses) {
+    return null;
   }
+
+  TestApi toTestApi(TestApiDto testApiDto);
+
+  TestApiResponse toTestApiResponse(TestApi testApi);
+
+  void mapToTestApi(@MappingTarget TestApi testApi, TestApiDto testApiDto);
+
+  default Page<TestApiResponse> toPageTestApiResponse(Page<TestApi> testApis){
+    return testApis.map(this::toTestApiResponse);
+  }
+
+  List<TestApiResponse> toTestApiResponseList(List<TestApi> testApis);
 }

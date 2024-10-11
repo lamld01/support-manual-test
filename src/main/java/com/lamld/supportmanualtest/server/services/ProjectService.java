@@ -20,9 +20,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProjectService extends BaseService {
 
-  private final ProjectRepository projectRepository;
-
-
   @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
   public ProjectResponse createProject(AccountInfo accountInfo, ProjectDto projectDto) {
     Project project = modelMapper.toProject(projectDto);
@@ -36,13 +33,13 @@ public class ProjectService extends BaseService {
       project.setRootProjectId(parentProject.getRootProjectId());
       project.setParentProjectId(parentProject.getId());
     }
-    projectRepository.save(project);
+    projectStorage.save(project);
     return modelMapper.toProjectResponse(project);
   }
 
   public Project getProjectById(Integer accountId, Integer id) {
     return projectStorage.findByIdAndAccountId(id, accountId)
-        .orElseThrow(() -> new RuntimeException("Project not found or access denied"));
+        .orElseThrow(() -> new BadRequestException("Project not found or access denied"));
   }
 
   public ProjectResponse findProjectById(AccountInfo accountInfo, Integer id) {
@@ -73,7 +70,7 @@ public class ProjectService extends BaseService {
   }
 
   public List<ProjectResponse> findAll() {
-    List<Project> projects = projectRepository.findAll();
+    List<Project> projects = projectStorage.findAll();
     return modelMapper.toProjectResponseList(projects);
   }
 }

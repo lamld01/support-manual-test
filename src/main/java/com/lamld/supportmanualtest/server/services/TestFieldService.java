@@ -3,14 +3,12 @@ package com.lamld.supportmanualtest.server.services;
 import com.lamld.supportmanualtest.app.dto.testField.TestFieldDto;
 import com.lamld.supportmanualtest.app.response.project.ProjectResponse;
 import com.lamld.supportmanualtest.app.response.testField.TestFieldResponse;
-import com.lamld.supportmanualtest.app.response.testField.TestFieldResponse;
 import com.lamld.supportmanualtest.app.response.validateConstrain.ValidateConstrainResponse;
 import com.lamld.supportmanualtest.server.data.auth.AccountInfo;
-import com.lamld.supportmanualtest.server.data.type.StatusEnum;
-import com.lamld.supportmanualtest.server.entities.Project;
 import com.lamld.supportmanualtest.server.entities.TestField;
 import com.lamld.supportmanualtest.server.entities.ValidateConstrain;
 import com.lamld.supportmanualtest.server.exception.BadRequestException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -22,16 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class TestFieldService extends BaseService{
+@RequiredArgsConstructor
+public class TestFieldService extends BaseService {
 
   private final ValidateConstrainService validateConstrainService;
   private final ProjectService projectService;
-
-  public TestFieldService(ValidateConstrainService validateConstrainService, ProjectService projectService) {
-    super();
-    this.validateConstrainService = validateConstrainService;
-    this.projectService = projectService;
-  }
 
   @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
   public TestFieldResponse createTestField(AccountInfo accountInfo, TestFieldDto testFieldDto) {
@@ -72,28 +65,31 @@ public class TestFieldService extends BaseService{
     // Assuming validateConstrainService.findAll() returns the list of all ValidateConstrain entities
     List<ValidateConstrain> validateConstrains = validateConstrainService.findAll();
     List<ProjectResponse> projects = projectService.findAll();
+
     // Map TestField to TestFieldResponse including ValidateConstrainResponse
     List<TestFieldResponse> testFieldResponses = testFieldPage.stream()
-        .map(testField -> {
-          // Map to ValidateConstrainResponse
-          List<ValidateConstrainResponse> validateConstrainResponses = validateConstrains.stream()
-              .filter(constrain -> testField.getValidateConstrainIds().contains(constrain.getId()))
-              .map(validateConstrain -> modelMapper.toValidateConstrainResponse(validateConstrain)) // Assuming you have a method to convert ValidateConstrain to ValidateConstrainResponse
-              .toList();
-
-          return new TestFieldResponse(
-              testField.getId(),
-              testField.getFieldName(),
-              projects.stream().filter(project -> project.id().equals(testField.getProjectId())).findFirst().orElse(null),
-              testField.getDescription(),
-              testField.getFieldCode(),
-              validateConstrainResponses // Pass the list of ValidateConstrainResponse objects
-          );
-        })
+        .map(testField -> createTestFieldResponse(testField, projects, validateConstrains))
         .toList();
 
     return new PageImpl<>(testFieldResponses, pageable, testFieldPage.getTotalElements());
   }
 
+  // Hàm tạo TestFieldResponse riêng
+  private TestFieldResponse createTestFieldResponse(TestField testField, List<ProjectResponse> projects, List<ValidateConstrain> validateConstrains) {
+    // Map to ValidateConstrainResponse
+    List<ValidateConstrainResponse> validateConstrainResponses = validateConstrains.stream()
+        .filter(constrain -> testField.getValidateConstrainIds().contains(constrain.getId()))
+        .map(validateConstrain -> modelMapper.toValidateConstrainResponse(validateConstrain)) // Assuming you have a method to convert ValidateConstrain to ValidateConstrainResponse
+        .toList();
 
+    return new TestFieldResponse(
+        testField.getId(),
+        testField.getFieldName(),
+        projects.stream().filter(project -> project.id().equals(testField.getProjectId())).findFirst().orElse(null),
+        testField.getDescription(),
+        testField.getFieldCode(),
+        testField.getDefaultRegexValue(),
+        validateConstrainResponses
+    );
+  }
 }

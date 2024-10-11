@@ -13,5 +13,6 @@ public record TestFieldDto(@Size(max = 255) String fieldName,
                            @NotNull Integer projectId,
                            @Size(max = 500) String description,
                            @NotNull @Size(max = 255) String fieldCode,
+                           @Size(max = 255) String defaultRegexValue,
                            List<Integer> validateConstrainIds){
 }

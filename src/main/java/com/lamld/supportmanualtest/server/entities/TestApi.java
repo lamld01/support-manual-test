@@ -32,20 +32,28 @@ public class TestApi extends BaseEntity {
   @Column(name = "api_name")
   private String apiName;
 
+  @NotNull
+  @Column(name = "method", nullable = false, length = 50)
+  private String method;
+
   @Size(max = 1000)
   @Column(name = "description", length = 1000)
   private String description;
 
   @Column(name = "param")
   @JdbcTypeCode(SqlTypes.JSON)
-  private Map<String, Object> param;
+  private Map<String, String> param;
 
   @Column(name = "body")
   @JdbcTypeCode(SqlTypes.JSON)
-  private Map<String, Object> body;
+  private Object body;
 
   @Column(name = "header")
   @JdbcTypeCode(SqlTypes.JSON)
-  private Map<String, Object> header;
+  private Map<String, String> header;
+
+  @NotNull
+  @Column(name = "account_id", nullable = false)
+  private Integer accountId;
 
 }
