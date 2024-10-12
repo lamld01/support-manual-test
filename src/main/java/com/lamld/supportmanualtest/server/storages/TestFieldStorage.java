@@ -10,6 +10,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -44,7 +45,7 @@ public class TestFieldStorage extends BaseStorage {
         predicates.add(cb.equal(root.get("accountId"), accountId));
       }
       if (projectId != null) {
-        predicates.add(cb.equal(root.get("project"), projectId));
+        predicates.add(cb.equal(root.get("projectId"), projectId));
       }
       if (fieldName != null) {
         predicates.add(cb.like(cb.lower(root.get("fieldName")), "%" + fieldName.toLowerCase() + "%"));
@@ -67,5 +68,9 @@ public class TestFieldStorage extends BaseStorage {
       }
       return cb.and(predicates.toArray(new Predicate[0]));
     };
+  }
+
+  public List<TestField> findByIdIn(HashSet<Integer> values) {
+    return testFieldRepository.findByIdIn(values);
   }
 }

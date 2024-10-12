@@ -27,18 +27,25 @@ public class ProjectController extends BaseController {
   private final ProjectService projectService;
 
   @PostMapping
-  public ProjectResponse createProject(Authentication authentication,  @RequestBody ProjectDto projectDto) {
+  public ProjectResponse createProject(Authentication authentication, @RequestBody ProjectDto projectDto) {
     return projectService.createProject(getAccountInfo(authentication), projectDto);
   }
 
   @GetMapping("/{id}")
-  public ProjectResponse getProjectById(Authentication authentication,@PathVariable Integer id) {
-    return projectService.findProjectById(getAccountInfo(authentication),id);
+  public ProjectResponse getProjectById(Authentication authentication, @PathVariable Integer id) {
+    return projectService.findProjectById(getAccountInfo(authentication), id);
   }
 
   @GetMapping("parent")
   public List<ProjectResponse> getAllProjects(Authentication authentication, @RequestParam Integer parentId) {
     return projectService.getAllProjects(getAccountInfo(authentication), parentId);
+  }
+
+  @GetMapping("all")
+  @PageableAsQueryParam
+  public BaseResponseDto<List<ProjectResponse>> getAllProject(Authentication authentication,
+                                                              @Parameter(hidden = true) @PageableDefault(size = 20) Pageable pageable) {
+    return new BaseResponseDto<>(projectService.findAll(getAccountInfo(authentication), pageable));
   }
 
   @GetMapping("page")
@@ -52,11 +59,11 @@ public class ProjectController extends BaseController {
 
   @PutMapping("/{id}")
   public ProjectResponse updateProject(Authentication authentication, @PathVariable Integer id, @RequestBody ProjectDto projectDto) {
-    return projectService.updateProject(getAccountInfo(authentication),id, projectDto);
+    return projectService.updateProject(getAccountInfo(authentication), id, projectDto);
   }
 
   @DeleteMapping("/{id}")
   public void deleteProject(Authentication authentication, @PathVariable Integer id) {
-    projectService.deleteProject(getAccountInfo(authentication),id);
+    projectService.deleteProject(getAccountInfo(authentication), id);
   }
 }

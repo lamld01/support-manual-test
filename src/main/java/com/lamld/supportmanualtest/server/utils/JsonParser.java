@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -166,6 +167,20 @@ public class JsonParser {
     long totalElements = jsonNode.get("totalElements").asLong();
     return new PageImpl<>(content, PageRequest.of(page, size), totalElements);
   }
+
+  @SneakyThrows
+  public static String convertBodyToJson(Object body) {
+    ObjectMapper objectMapper = new ObjectMapper();
+    if (body instanceof List) {
+      return objectMapper.writeValueAsString(body);
+    } else if (body instanceof Map) {
+      return objectMapper.writeValueAsString(body);
+    } else {
+      // Nếu body không phải là Map hoặc List, ném ra ngoại lệ
+      throw new IllegalArgumentException("Body must be a Map or List");
+    }
+  }
+
 //  public static void main(String[] args) {
 //    List<String> value = JsonParser.arrayList(null, String.class);
 //    System.out.println(value);

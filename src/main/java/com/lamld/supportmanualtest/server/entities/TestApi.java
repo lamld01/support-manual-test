@@ -1,5 +1,7 @@
 package com.lamld.supportmanualtest.server.entities;
 
+import com.lamld.supportmanualtest.server.data.pojo.JsonInfo;
+import com.lamld.supportmanualtest.server.data.pojo.KeyValue;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -8,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter
@@ -42,18 +45,22 @@ public class TestApi extends BaseEntity {
 
   @Column(name = "param")
   @JdbcTypeCode(SqlTypes.JSON)
-  private Map<String, String> param;
+  private List<KeyValue> param;
 
   @Column(name = "body")
   @JdbcTypeCode(SqlTypes.JSON)
-  private Object body;
+  private JsonInfo body;
 
   @Column(name = "header")
   @JdbcTypeCode(SqlTypes.JSON)
-  private Map<String, String> header;
+  private List<KeyValue> header;
 
   @NotNull
   @Column(name = "account_id", nullable = false)
   private Integer accountId;
+
+  @Size(max = 500)
+  @Column(name = "path", length = 500)
+  private String path;
 
 }

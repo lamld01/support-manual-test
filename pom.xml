@@ -142,7 +142,18 @@
             <version>${micrometer.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.github.mifmif/generex -->
+        <dependency>
+            <groupId>com.github.mifmif</groupId>
+            <artifactId>generex</artifactId>
+            <version>1.0.2</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20240303</version>
+        </dependency>
         <!-- logging-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

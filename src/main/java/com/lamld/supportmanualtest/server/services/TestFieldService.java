@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -91,5 +92,9 @@ public class TestFieldService extends BaseService {
         testField.getDefaultRegexValue(),
         validateConstrainResponses
     );
+  }
+
+  public List<TestField> findByIdIn(HashSet<Integer> values) {
+    return testFieldStorage.findByIdIn(values);
   }
 }

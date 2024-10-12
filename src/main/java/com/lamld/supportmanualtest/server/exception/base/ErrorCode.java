@@ -6,4 +6,5 @@ public class ErrorCode {
   public static final int UNAUTHORIZED = 401;
   public static final int FORBIDDEN = 403;
   public static final int NOT_VALID = 1010;
+  public static final int INTERNAL_SERVER_ERROR = 1100;
 }
