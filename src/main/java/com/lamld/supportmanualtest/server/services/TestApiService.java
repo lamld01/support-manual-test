@@ -17,6 +17,7 @@ import com.lamld.supportmanualtest.server.utils.RequestUtil;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -32,11 +33,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@RequiredArgsConstructor
 public class TestApiService extends BaseService {
 
   private final ProjectService projectService;
   private final TestFieldService testFieldService;
+
+  @Lazy
+  public TestApiService(ProjectService projectService, TestFieldService testFieldService) {
+    this.projectService = projectService;
+    this.testFieldService = testFieldService;
+  }
 
   @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
   public TestApiResponse createTestApi(AccountInfo accountInfo, TestApiDto testApiDto) {
@@ -56,7 +62,7 @@ public class TestApiService extends BaseService {
 
   public TestApi findTestApiById(Integer accountId, Integer id) {
     return testApiStorage.findByAccountIdAndId(accountId, id)
-        .orElseThrow(() -> new RuntimeException("TestApi not found"));
+        .orElseThrow(() -> new BadRequestException("TestApi not found"));
   }
 
   public TestApiResponse updateTestApi(AccountInfo accountInfo, Integer id, TestApiDto testApiDto) {

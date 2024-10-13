@@ -5,10 +5,13 @@ import com.lamld.supportmanualtest.app.response.project.ProjectResponse;
 import com.lamld.supportmanualtest.app.response.testField.TestFieldResponse;
 import com.lamld.supportmanualtest.app.response.validateConstrain.ValidateConstrainResponse;
 import com.lamld.supportmanualtest.server.data.auth.AccountInfo;
+import com.lamld.supportmanualtest.server.entities.TestApi;
 import com.lamld.supportmanualtest.server.entities.TestField;
 import com.lamld.supportmanualtest.server.entities.ValidateConstrain;
 import com.lamld.supportmanualtest.server.exception.BadRequestException;
+import com.lamld.supportmanualtest.server.utils.JsonUtil;
 import lombok.RequiredArgsConstructor;
+import org.json.JSONObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +29,7 @@ public class TestFieldService extends BaseService {
 
   private final ValidateConstrainService validateConstrainService;
   private final ProjectService projectService;
+  private final TestApiService testApiService;
 
   @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
   public TestFieldResponse createTestField(AccountInfo accountInfo, TestFieldDto testFieldDto) {
@@ -60,10 +64,17 @@ public class TestFieldService extends BaseService {
   }
 
   @Transactional(readOnly = true)
-  public Page<TestFieldResponse> findTestField(AccountInfo accountInfo, Integer projectId, String fieldName, String fieldCode, List<Integer> constrainIds, Pageable pageable) {
-    Page<TestField> testFieldPage = testFieldStorage.findPage(accountInfo.getAccountId(), projectId, fieldName, fieldCode, constrainIds, pageable);
+  public Page<TestFieldResponse> findTestField(AccountInfo accountInfo, Integer apiId, Integer projectId, String fieldName, String fieldCode, List<Integer> constrainIds, Pageable pageable) {
+    List<Integer> fieldIds = null;
 
-    // Assuming validateConstrainService.findAll() returns the list of all ValidateConstrain entities
+    if (apiId != null) {
+      TestApi testApi = testApiService.findTestApiById(accountInfo.getAccountId(), apiId);
+      fieldIds = JsonUtil.getValuesByKey(new JSONObject(testApi.getBody()), "value", Integer.class)
+          .stream()
+          .toList(); // Hoặc bạn có thể xử lý các giá trị này theo cách bạn muốn
+    }
+    Page<TestField> testFieldPage = testFieldStorage.findPage(accountInfo.getAccountId(), fieldIds, projectId, fieldName, fieldCode, constrainIds, pageable);
+
     List<ValidateConstrain> validateConstrains = validateConstrainService.findAll();
     List<ProjectResponse> projects = projectService.findAll();
 

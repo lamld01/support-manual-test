@@ -33,14 +33,17 @@ public class TestFieldStorage extends BaseStorage {
     testFieldRepository.delete(testField);
   }
 
-  public Page<TestField> findPage(Integer accountId, Integer projectId, String fieldName, String fieldCode, List<Integer> constrainIds, Pageable pageable) {
-    return testFieldRepository.findAll(filterByConditions(accountId, projectId, fieldName, fieldCode, constrainIds), pageable);
+  public Page<TestField> findPage(Integer accountId, List<Integer> fieldIds, Integer projectId, String fieldName, String fieldCode, List<Integer> constrainIds, Pageable pageable) {
+    return testFieldRepository.findAll(filterByConditions(accountId, fieldIds, projectId, fieldName, fieldCode, constrainIds), pageable);
   }
 
-  private Specification<TestField> filterByConditions(Integer accountId, Integer projectId, String fieldName, String fieldCode, List<Integer> constrainIds) {
+  private Specification<TestField> filterByConditions(Integer accountId, List<Integer> fieldIds, Integer projectId, String fieldName, String fieldCode, List<Integer> constrainIds) {
     return (root, query, cb) -> {
       List<Predicate> predicates = new ArrayList<>();
 
+      if (fieldIds != null && !fieldIds.isEmpty()) {
+        predicates.add(root.get("id").in(fieldIds));
+      }
       if (accountId != null) {
         predicates.add(cb.equal(root.get("accountId"), accountId));
       }

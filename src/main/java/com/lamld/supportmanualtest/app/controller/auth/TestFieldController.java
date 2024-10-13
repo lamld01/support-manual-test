@@ -42,12 +42,13 @@ public class TestFieldController extends BaseController {
   @GetMapping("page")
   @PageableAsQueryParam
   public BaseResponseDto<PageResponse<TestFieldResponse>> getTestFieldPage(Authentication authentication,
+                                                                           @RequestParam(required = false) Integer apiId,
                                                                            @RequestParam(required = false) Integer projectId,
                                                                            @RequestParam(required = false) String fieldName,
                                                                            @RequestParam(required = false) String fieldCode,
                                                                            @RequestParam(required = false) List<Integer> constrainIds,
                                                                            @Parameter(hidden = true) @PageableDefault(size = 20) Pageable pageable) {
-    Page<TestFieldResponse> pageResponse = testFieldService.findTestField(getAccountInfo(authentication), projectId, fieldName, fieldCode, constrainIds, pageable);
+    Page<TestFieldResponse> pageResponse = testFieldService.findTestField(getAccountInfo(authentication),apiId, projectId, fieldName, fieldCode, constrainIds, pageable);
     return new BaseResponseDto<>(PageResponse.createFrom(pageResponse));
   }
 
@@ -60,4 +61,5 @@ public class TestFieldController extends BaseController {
   public void deleteTestField(Authentication authentication, @PathVariable Integer id) {
     testFieldService.deleteTestField(getAccountInfo(authentication), id);
   }
+
 }
