@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.lamld</groupId>
-    <artifactId>support-manual-test</artifactId>
+    <artifactId>dev-tool</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>support-manual-test</name>
-    <description>support-manual-test</description>
+    <name>dev-tool</name>
+    <description>dev-tool</description>
     <url/>
     <licenses>
         <license/>
