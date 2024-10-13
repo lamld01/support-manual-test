@@ -8,4 +8,4 @@ FROM amazoncorretto:21.0.2-alpine3.19
 ARG APPNAME=dev-tool
 COPY --from=MAVEN_TOOL_CHAIN /tmp/target/${APPNAME}-0.0.1-SNAPSHOT.jar app.jar
 
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar","/app.jar"]
