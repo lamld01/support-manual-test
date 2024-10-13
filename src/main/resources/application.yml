@@ -47,7 +47,7 @@ spring:
 management:
   metrics:
     enable:
-      jvm: true
+      jvm: false
 springdoc:
   api-docs:
     path: /v1/manual-test/docs/api/index.html
