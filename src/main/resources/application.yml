@@ -44,8 +44,10 @@ spring:
     jwt:
       secret: ${JWT_SECRET:true}
       expiration: ${JWT_EXPIRATION:86400000}
-
-
+management:
+  metrics:
+    enable:
+      jvm: true
 springdoc:
   api-docs:
     path: /v1/manual-test/docs/api/index.html
