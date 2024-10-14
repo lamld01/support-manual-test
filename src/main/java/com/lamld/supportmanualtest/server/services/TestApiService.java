@@ -167,17 +167,9 @@ public class TestApiService extends BaseService {
 
   // Hàm tạo TestApiResponse riêng
   private TestApiResponse createTestApiResponse(TestApi testApi, ProjectResponse projectResponse) {
-    return new TestApiResponse(
-        testApi.getId(),
-        projectResponse,
-        testApi.getApiName(),
-        testApi.getDescription(),
-        testApi.getMethod(),
-        testApi.getPath(),
-        testApi.getParam(),
-        testApi.getBody(),
-        testApi.getHeader()
-    );
+    TestApiResponse response = modelMapper.toTestApiResponse(testApi);
+    response.setProject(projectResponse);
+    return response;
   }
 
 }

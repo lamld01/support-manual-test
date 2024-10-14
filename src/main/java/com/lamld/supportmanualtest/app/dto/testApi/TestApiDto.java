@@ -31,7 +31,7 @@ public class TestApiDto implements Serializable {
 
   @Size(max = 50)
   private String method;
-
+  private List<KeyValue> pathVariable;
   private List<KeyValue> param;
 
   private JsonInfo body;

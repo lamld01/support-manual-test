@@ -35,6 +35,8 @@ public class TestApiResponse {
   @Size(max = 500)
   private String path;
 
+  private List<KeyValue> pathVariable;
+
   private List<KeyValue> param;
 
   private JsonInfo body;
@@ -42,13 +44,14 @@ public class TestApiResponse {
   private List<KeyValue> header;
 
   // Constructor
-  public TestApiResponse(Integer id, ProjectResponse project, String apiName, String description, String method, String path, List<KeyValue> param, JsonInfo body, List<KeyValue> header) {
+  public TestApiResponse(Integer id, ProjectResponse project, String apiName, String description, String method, String path, List<KeyValue> pathVariable, List<KeyValue> param, JsonInfo body, List<KeyValue> header) {
     this.id = id;
     this.project = project;
     this.apiName = apiName;
     this.description = description;
     this.method = method;
     this.path = path;
+    this.pathVariable = pathVariable;
     this.param = param;
     this.body = body;
     this.header = header;

@@ -63,4 +63,8 @@ public class TestApi extends BaseEntity {
   @Column(name = "path", length = 500)
   private String path;
 
+  @Column(name = "path_variable")
+  @JdbcTypeCode(SqlTypes.JSON)
+  private List<KeyValue> pathVariable;
+
 }

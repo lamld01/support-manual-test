@@ -5,11 +5,11 @@ import com.lamld.supportmanualtest.app.dto.testApi.TestApiDto;
 import com.lamld.supportmanualtest.app.response.BaseResponseDto;
 import com.lamld.supportmanualtest.app.response.PageResponse;
 import com.lamld.supportmanualtest.app.response.testApi.TestApiResponse;
+import com.lamld.supportmanualtest.server.data.pojo.OpenApiDefinition.OpenApiDefinition;
 import com.lamld.supportmanualtest.server.data.pojo.RequestResponse;
 import com.lamld.supportmanualtest.server.services.TestApiService;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
-import org.json.JSONObject;
 import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +17,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("v1/manual-test/test-api")
@@ -69,4 +66,6 @@ public class TestApiController extends BaseController {
   public  BaseResponseDto<RequestResponse> requestApi(Authentication authentication, @RequestParam Integer id) {
     return new  BaseResponseDto<>(testApiService.requestApi(getAccountInfo(authentication), id));
   }
+
+
 }

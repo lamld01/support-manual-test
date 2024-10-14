@@ -54,7 +54,4 @@ public class LoggingFilter implements Filter {
     return queryString == null ? requestURL.toString() : requestURL.append('?').append(queryString).toString();
   }
 
-  @Override
-  public void destroy() {
-  }
 }
