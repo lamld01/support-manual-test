@@ -39,10 +39,10 @@ public class TestApiStorage extends BaseStorage {
       if (projectId != null) {
         predicates.add(criteriaBuilder.equal(root.get("projectId"), projectId));
       }
-      if (apiName != null) {
+      if (apiName != null && !apiName.isEmpty()) {
         predicates.add(criteriaBuilder.equal(root.get("apiName"), apiName));
       }
-      if (description != null) {
+      if (description != null && !description.isEmpty()) {
         predicates.add(criteriaBuilder.equal(root.get("description"), description));
       }
       return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
