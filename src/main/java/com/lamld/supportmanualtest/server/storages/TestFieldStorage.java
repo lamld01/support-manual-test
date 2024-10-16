@@ -76,4 +76,8 @@ public class TestFieldStorage extends BaseStorage {
   public List<TestField> findByIdIn(HashSet<Integer> values) {
     return testFieldRepository.findByIdIn(values);
   }
+
+  public boolean existsByFieldCodeAndProjectId(String s, Integer integer) {
+    return testFieldRepository.existsByFieldCodeAndProjectId(s, integer);
+  }
 }

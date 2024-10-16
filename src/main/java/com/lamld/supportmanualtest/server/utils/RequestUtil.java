@@ -23,14 +23,16 @@ public class RequestUtil {
   private static final HttpClient httpClient = HttpClient.newHttpClient();
 
   // Utility method to send requests with specified method
-  public static RequestResponse sendRequest(String url, String method, Object body, List<KeyValue> headers, List<KeyValue> queryParams) {
+  public static RequestResponse sendRequest(String url, String method, Object body, List<KeyValue> headers, List<KeyValue> queryParams, long waitTime) {
     try {
+      log.debug("Sending request with url: {}, method: {}, body: {}, headers: {}, queryParams: {}", url, method, body, headers, queryParams);
+
       // Build URL with query parameters if method is GET
       if (queryParams != null && !queryParams.isEmpty()) {
         url = buildUrlWithParams(url, queryParams);
       }
-      String jsonBody = JsonParser.convertBodyToJson(body);
 
+      String jsonBody = JsonParser.convertBodyToJson(body);
 
       HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
           .uri(URI.create(url))
@@ -50,17 +52,32 @@ public class RequestUtil {
         case "DELETE":
           requestBuilder.DELETE();
           break;
+        default:
+          throw new IllegalArgumentException("Invalid HTTP method: " + method);
       }
 
       // Add headers
       addHeaders(requestBuilder, headers);
 
-      return sendHttpRequest(requestBuilder.build());
+      // Gửi yêu cầu
+      RequestResponse response = sendHttpRequest(requestBuilder.build());
+      response.setRequest(body);
+      // Thêm thời gian chờ trước khi kết thúc
+      if (waitTime > 0) {
+        Thread.sleep(waitTime); // Thời gian chờ giữa các lần gọi
+      }
+
+      return response;
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt(); // Khôi phục trạng thái ngắt
+      log.error("Thread was interrupted", e);
+      throw new InternalException("Request was interrupted");
     } catch (Exception e) {
       log.error("Error sending request", e);
       throw new InternalException();
     }
   }
+
 
   // Utility method to build URL with query parameters
   public static String buildUrlWithParams(String baseUrl, List<KeyValue> queryParams) {
@@ -98,17 +115,20 @@ public class RequestUtil {
       List<Object> rawList = jsonArray.toList(); // This returns a list of Objects
       List<Map<String, Object>> listOfMaps = rawList.stream()
           .filter(item -> item instanceof Map) // Check if item is a Map
-          .map(item -> (Map<String, Object>) item) // Safely cast to Map<String, Object>
-          .collect(Collectors.toList());
-      requestResponse.setBody(listOfMaps);
+          .map(item -> {
+            Map<String, Object> mapItem = (Map<String, Object>) item; // Safely cast to Map<String, Object>
+            mapItem.remove("stackTrace"); // Remove the stackTrace key if it exists
+            return mapItem;
+          }).collect(Collectors.toList());
+      requestResponse.setResponse(listOfMaps);
     } else if (responseBody.startsWith("{")) {
       // Handle a single JSON object (JSONObject)
       JSONObject jsonObject = new JSONObject(responseBody);
       Map<String, Object> map = jsonObject.toMap();
-      requestResponse.setBody(map);
+      requestResponse.setResponse(map);
     } else {
       // Handle non-JSON responses or error handling if needed
-      requestResponse.setBody(responseBody); // Or handle differently
+      requestResponse.setResponse(responseBody); // Or handle differently
     }
 
     return requestResponse;

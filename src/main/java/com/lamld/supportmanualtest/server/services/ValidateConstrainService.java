@@ -59,4 +59,8 @@ public class ValidateConstrainService extends BaseService {
   public List<ValidateConstrain> findAll() {
     return validateConstrainStorage.findAll();
   }
+
+  public List<ValidateConstrain> findByInIn(List<Integer> allValidateConstrainIds) {
+    return validateConstrainStorage.findByIdIn(allValidateConstrainIds);
+  }
 }

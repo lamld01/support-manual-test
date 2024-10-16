@@ -57,4 +57,8 @@ public class ValidateConstrainStorage extends BaseStorage {
   public List<ValidateConstrain> findAll() {
     return validateConstrainRepository.findAll();
   }
+
+  public List<ValidateConstrain> findByIdIn(List<Integer> allValidateConstrainIds) {
+    return validateConstrainRepository.findByIdIn(allValidateConstrainIds);
+  }
 }

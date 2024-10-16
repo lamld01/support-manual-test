@@ -12,4 +12,6 @@ public interface TestFieldRepository extends JpaRepository<TestField, Integer>, 
   Optional<TestField> findByFieldName(String name);
 
   List<TestField> findByIdIn(HashSet<Integer> values);
+
+  boolean existsByFieldCodeAndProjectId(String s, Integer integer);
 }

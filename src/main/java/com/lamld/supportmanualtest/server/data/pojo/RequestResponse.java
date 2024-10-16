@@ -11,5 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class RequestResponse {
   int status;
-  Object body; // Can hold a Map or a List of Maps
+  String testCase = "Case đúng";
+  Object request;
+  Object response; // Can hold a Map or a List of Maps
 }

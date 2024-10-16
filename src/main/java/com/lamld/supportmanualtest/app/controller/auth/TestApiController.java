@@ -5,7 +5,6 @@ import com.lamld.supportmanualtest.app.dto.testApi.TestApiDto;
 import com.lamld.supportmanualtest.app.response.BaseResponseDto;
 import com.lamld.supportmanualtest.app.response.PageResponse;
 import com.lamld.supportmanualtest.app.response.testApi.TestApiResponse;
-import com.lamld.supportmanualtest.server.data.pojo.OpenApiDefinition.OpenApiDefinition;
 import com.lamld.supportmanualtest.server.data.pojo.RequestResponse;
 import com.lamld.supportmanualtest.server.services.TestApiService;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -17,6 +16,8 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("v1/manual-test/test-api")
@@ -62,9 +63,19 @@ public class TestApiController extends BaseController {
   public  BaseResponseDto<Object> generateApiBody(Authentication authentication, @RequestParam Integer id) {
     return new  BaseResponseDto<>(testApiService.generateApiBody(getAccountInfo(authentication), id));
   }
-  @PostMapping("request")
+
+  @GetMapping("validate/json-body")
+  public  BaseResponseDto<Object> generateErrorApiBody(Authentication authentication, @RequestParam Integer id) {
+    return new  BaseResponseDto<>(testApiService.generateInvalidateApiBody(getAccountInfo(authentication), id));
+  }
+  @PostMapping("request/valid-api")
   public  BaseResponseDto<RequestResponse> requestApi(Authentication authentication, @RequestParam Integer id) {
     return new  BaseResponseDto<>(testApiService.requestApi(getAccountInfo(authentication), id));
+  }
+
+  @PostMapping("request/invalid-api")
+  public  BaseResponseDto<List<RequestResponse>> requestInvalidApi(Authentication authentication, @RequestParam Integer id) {
+    return new  BaseResponseDto<>(testApiService.requestInvalidApi(getAccountInfo(authentication), id));
   }
 
 

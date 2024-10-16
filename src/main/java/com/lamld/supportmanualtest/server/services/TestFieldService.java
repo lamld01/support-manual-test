@@ -33,6 +33,10 @@ public class TestFieldService extends BaseService {
 
   @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRES_NEW)
   public TestFieldResponse createTestField(AccountInfo accountInfo, TestFieldDto testFieldDto) {
+    boolean isExist = testFieldStorage.existsByFieldCodeAndProjectId(testFieldDto.fieldCode(), testFieldDto.projectId());
+    if (isExist) {
+      throw new BadRequestException("Field code already exists in the project");
+    }
     TestField testField = testFieldStorage.findByFieldName(testFieldDto.fieldName())
         .orElse(modelMapper.toTestField(testFieldDto));
     testField.setAccountId(accountInfo.getAccountId());
