@@ -47,7 +47,7 @@ public class SecurityConfig {
         .cors(cors -> cors  // Kích hoạt CORS và sử dụng cấu hình mặc định hoặc tùy chỉnh
             .configurationSource(request -> {
               CorsConfiguration corsConfig = new CorsConfiguration();
-              corsConfig.setAllowedOrigins(List.of("*"));  // Chỉ định nguồn
+              corsConfig.setAllowedOrigins(List.of("*","https://dev-tools.luckypresent.com.vn"));  // Chỉ định nguồn
               corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
               corsConfig.setAllowedHeaders(List.of("*"));
               return corsConfig;
